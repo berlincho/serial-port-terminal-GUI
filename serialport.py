@@ -1,14 +1,12 @@
+import os, sys, os.path, logging
+import subprocess
 import serial
 import glob
 import time
-from PIL import ImageTk, Image
-import Tkinter as tk     # python 2
-import tkFont as tkfont  # python 2
-import os, sys, os.path
-import subprocess, tkFileDialog, tkMessageBox
-import ttk
+#from PIL import ImageTk, Image
 from xmodem import XMODEM
-import logging
+import tkinter as tk     # python 3
+from tkinter import filedialog, messagebox, ttk
 
 history = [''] * 6
 history_index = 0
@@ -95,13 +93,13 @@ class serial_port(tk.Tk):
 		
 	def save_to_file(self):
 		if not self.List.curselection():
-			tkMessageBox.showerror("Error", "Device lose")
+			messagebox.showerror("Error", "Device lose")
 			return
 		if not Open:
-			tkMessageBox.showerror("Error", "Device does not connect.")
+			messagebox.showerror("Error", "Device does not connect.")
 			return
 		data = self.mge.get("1.0",'end-1c')
-		self.filename = tkFileDialog.asksaveasfilename(**self.file_opt)
+		self.filename = filedialog.asksaveasfilename(**self.file_opt)
 		if self.filename == "":
 			return
 		else:
@@ -109,12 +107,12 @@ class serial_port(tk.Tk):
 				ff = open(self.filename, 'wb')
 				ff.write(data)
 				ff.close()
-				tkMessageBox.showinfo("Information", "Log saved.")
+				messagebox.showinfo("Information", "Log saved.")
 			except:
-				tkMessageBox.showinfo("Information", "Error!")
+				messagebox.showinfo("Information", "Error!")
 		
 	def on_closing(self):
-		if tkMessageBox.askokcancel("Quit", "Do you want to quit?"):
+		if messagebox.askokcancel("Quit", "Do you want to quit?"):
 			self.after_cancel(self.readloop_after)
 			self.after_cancel(self.scanusb_after)
 			
@@ -144,7 +142,7 @@ class serial_port(tk.Tk):
 			
 	def connect(self):
 		if not self.List.curselection():
-			tkMessageBox.showerror("Error", "Device lose")
+			messagebox.showerror("Error", "Device lose")
 			return
 		device = self.List.curselection()[0]
 
@@ -160,7 +158,7 @@ class serial_port(tk.Tk):
 	
 	def disconnect(self):
 		if not self.List.curselection():
-			tkMessageBox.showerror("Error", "Device lose")
+			messagebox.showerror("Error", "Device lose")
 			return
 		try:
 			self.s.close()
@@ -172,10 +170,10 @@ class serial_port(tk.Tk):
 	
 	def send(self, event=None):
 		if not self.List.curselection():
-			tkMessageBox.showerror("Error", "Device lose")
+			messagebox.showerror("Error", "Device lose")
 			return
 		if not Open:
-			tkMessageBox.showerror("Error", "Device does not connect.")
+			messagebox.showerror("Error", "Device does not connect.")
 			return
 		if self.e1.get() != '':
 			global history_index, history
@@ -230,14 +228,14 @@ class serial_port(tk.Tk):
 		
 	def open_file(self):
 		if not self.List.curselection():
-			tkMessageBox.showerror("Error", "Device lose")
+			messagebox.showerror("Error", "Device lose")
 			return
 		if not Open:
-			tkMessageBox.showerror("Error", "Device does not connect.")
+			messagebox.showerror("Error", "Device does not connect.")
 			return
 
-		self.filename = tkFileDialog.askopenfilename()
-		print self.filename 
+		self.filename = filedialog.askopenfilename()
+		print(self.filename) 
 		if self.filename == '':
 			return
 		else:
@@ -271,7 +269,7 @@ class serial_port(tk.Tk):
 		while 1:
 			if serial.read(1) != NAK:
 				t = t + 1
-				print anim[t%len(anim)],'\r',
+				print(anim[t%len(anim)],'\r'),
 				if t == 60 : return False
 			else:
 				break

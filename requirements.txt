@@ -1,0 +1,3 @@
+glob2==0.7
+serial==0.0.97 
+xmodem==0.4.6
